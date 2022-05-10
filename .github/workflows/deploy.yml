@@ -1,0 +1,60 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/*.go"
+      - "Dockerfile"
+      - "go.*"
+      - "*.sh"
+concurrency: production
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@main
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Prepare env
+        run: |
+          echo "TAG=$(echo $GITHUB_SHA | head -c7)" >> $GITHUB_ENV
+          echo "VERSION=$(git rev-list HEAD --count)" >> $GITHUB_ENV
+          echo "DATE=$(date '+%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+      - name: Docker hub login
+        uses: docker/login-action@v1
+        with:
+          username: etimodanielwinther
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Build and push Docker image
+        run: ./docker-build-push.sh
+
+      - name: Update k8s manifests
+        run: |
+          for file in $(find .kubernetes/ -name "*.yaml"); do
+            echo "Updating $file"
+            sed -i 's|<TAG>|'${TAG}'|' $file
+            sed -i 's|<VERSION>|'${VERSION}'|' $file
+            sed -i 's|<DATE>|'${DATE}'|' $file
+          done
+
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 k8s-promotion
+
+      - name: Deploy to Etimo Kubernetes
+        run: |
+          kubectl apply -f .kubernetes/
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/admission-server
