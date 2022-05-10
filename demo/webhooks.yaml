@@ -1,0 +1,44 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: self-signer
+  namespace: default
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: admission-server-certificate
+  namespace: default
+spec:
+  secretName: admission-server-certificate-secret
+  dnsNames:
+    - admission-server
+    - admission-server.default
+    - admission-server.default.svc
+  issuerRef:
+    name: self-signer
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: admission-server
+  annotations:
+    cert-manager.io/inject-ca-from: default/admission-server-certificate
+webhooks:
+  - name: admission-server.default.svc
+    sideEffects: None
+    admissionReviewVersions: ["v1"]
+    clientConfig:
+      service:
+        name: admission-server
+        namespace: default
+        path: "/validate/ingresses"
+    rules:
+      - operations: ["*"]
+        apiGroups: ["networking.k8s.io"]
+        apiVersions: ["v1"]
+        resources: ["ingresses"]
+        scope: "*"
+    # failurePolicy: Ignore

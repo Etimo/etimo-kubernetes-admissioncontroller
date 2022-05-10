@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: le-staging-wildcard-issuer
+    kubernetes.io/ingress.class: nginx
+  creationTimestamp: "2022-03-23T10:36:01Z"
+  generation: 7
+  name: etimo-ingress-fail
+  namespace: default
+spec:
+  rules:
+    - host: blasdf.staging.etimo-test.live
+      http:
+        paths:
+          - backend:
+              service:
+                name: demo
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
