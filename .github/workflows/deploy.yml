@@ -8,7 +8,7 @@ on:
       - "Dockerfile"
       - "go.*"
       - "*.sh"
-concurrency: production
+concurrency: deploy
 jobs:
   build:
     runs-on: ubuntu-latest

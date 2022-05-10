@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: server
-          image: etimodanielwinther/etimo-kubernetes-admissioncontroller:latest
+          image: etimodanielwinther/etimo-kubernetes-admissioncontroller:<TAG>
           imagePullPolicy: Always
           livenessProbe:
             httpGet:
