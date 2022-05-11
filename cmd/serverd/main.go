@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/douglasmakey/admissioncontroller"
-	"github.com/douglasmakey/admissioncontroller/http"
+	"github.com/Etimo/etimo-kubernetes-admissioncontroller"
+	"github.com/Etimo/etimo-kubernetes-admissioncontroller/http"
 
 	log "k8s.io/klog/v2"
 )

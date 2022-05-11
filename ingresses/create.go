@@ -3,8 +3,7 @@ package ingresses
 import (
 	"regexp"
 
-	"github.com/douglasmakey/admissioncontroller"
-
+	"github.com/Etimo/etimo-kubernetes-admissioncontroller"
 	v1 "k8s.io/api/admission/v1"
 )
 

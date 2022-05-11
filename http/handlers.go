@@ -6,8 +6,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/douglasmakey/admissioncontroller"
-
+	admissioncontroller "github.com/Etimo/etimo-kubernetes-admissioncontroller"
 	v1 "k8s.io/api/admission/v1"
 	meta "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"

@@ -3,8 +3,7 @@ package ingresses
 import (
 	"encoding/json"
 
-	"github.com/douglasmakey/admissioncontroller"
-
+	admissioncontroller "github.com/Etimo/etimo-kubernetes-admissioncontroller"
 	v1 "k8s.io/api/networking/v1"
 )
 

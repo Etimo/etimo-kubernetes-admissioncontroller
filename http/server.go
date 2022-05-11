@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/douglasmakey/admissioncontroller"
-	"github.com/douglasmakey/admissioncontroller/ingresses"
+	"github.com/Etimo/etimo-kubernetes-admissioncontroller"
+	"github.com/Etimo/etimo-kubernetes-admissioncontroller/ingresses"
 )
 
 // NewServer creates and return a http.Server
